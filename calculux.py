@@ -141,8 +141,13 @@ class Calculux(qw.QMainWindow):
         return
 
     def evaluate(self):
-        if len(self.screen.text()) > 0:
-            self.screen.setText(str(eval(self.screen.text())))
+        if len(self.screen.text()) > 0 and self.screen.text() != 'ERROR':
+            try:
+                result = eval(self.screen.text())
+            except SyntaxError:
+                self.screen.setText('ERROR')
+            else:
+                self.screen.setText(str(result))
         return
 
     def clear(self):
