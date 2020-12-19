@@ -16,38 +16,49 @@ class UserInterface(qw.QMainWindow):
 
         self.grid = qw.QGridLayout()
 
+        # create screen
+        self.screen = qw.QLineEdit()
+        self.screen.setAlignment(Qt.AlignRight)
+        self.screen.setReadOnly(True)
+        self.grid.addWidget(self.screen, 0, 0, 1, 4)
+
         # create number buttons
         self.numbers = []
         for i in range(10):
             self.numbers.append(qw.QPushButton(text=str(i)))
-
-        self.numbers[1].clicked.connect(self.print_1)
+            self.numbers[i].clicked.connect(self.button_factory(str(i)))
 
         # add number buttons to display
         btn = iter(self.numbers)
-        self.grid.addWidget(next(btn), 3, 1)
-        for i in range(2, -1, -1):
+        self.grid.addWidget(next(btn), 5, 1)
+        for i in range(4, 1, -1):
             for j in range(3):
                 self.grid.addWidget(next(btn), i, j)
 
         # create and add other buttons
         self.decimal = qw.QPushButton(text='.')
-        self.grid.addWidget(self.decimal, 3, 0)
+        self.grid.addWidget(self.decimal, 5, 0)
+        self.decimal.clicked.connect(self.button_factory('.'))
 
         self.equals = qw.QPushButton(text='=')
-        self.grid.addWidget(self.equals, 3, 2)
+        self.grid.addWidget(self.equals, 5, 2)
+        self.equals.clicked.connect(self.button_factory('='))
 
         self.multiply = qw.QPushButton(text='*')
-        self.grid.addWidget(self.multiply, 0, 3)
+        self.grid.addWidget(self.multiply, 2, 3)
+        self.multiply.clicked.connect(self.button_factory('*'))
 
         self.divide = qw.QPushButton(text='/')
-        self.grid.addWidget(self.divide, 1, 3)
+        self.grid.addWidget(self.divide, 3, 3)
+        self.divide.clicked.connect(self.button_factory('/'))
 
         self.subtract = qw.QPushButton(text='-')
-        self.grid.addWidget(self.subtract, 2, 3)
+        self.grid.addWidget(self.subtract, 4, 3)
+        self.subtract.clicked.connect(self.button_factory('-'))
 
         self.add = qw.QPushButton(text='+')
-        self.grid.addWidget(self.add, 3, 3)
+        self.grid.addWidget(self.add, 5, 3)
+        self.add.clicked.connect(self.button_factory('+'))
 
         self._centralWidget.setLayout(self.grid)
 
@@ -56,7 +67,7 @@ class UserInterface(qw.QMainWindow):
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_0:
             self.numbers[0].animateClick()
-        elif event.key() == Qt.Key_1:
+        elif (event.key() == Qt.Key_1) and (event.modifiers() & Qt.ControlModifier):
             self.numbers[1].animateClick()
         elif event.key() == Qt.Key_2:
             self.numbers[2].animateClick()
@@ -82,16 +93,18 @@ class UserInterface(qw.QMainWindow):
             self.subtract.animateClick()
         elif event.key() == Qt.Key_Plus:
             self.add.animateClick()
-        elif event.key() == Qt.Key_Equal:
+        elif event.key() == Qt.Key_Equal or event.key() == Qt.Key_Return:
             self.equals.animateClick()
         elif event.key() == Qt.Key_Period:
             self.decimal.animateClick()
 
         return
 
-    def print_1(self):
-        print(1)
-        return
+    def button_factory(self, text):
+        def f():
+            print(text)
+
+        return f
 
 
 def main():
@@ -99,6 +112,7 @@ def main():
     view = UserInterface()
     view.show()
     sys.exit(calculux.exec_())
+
 
 if __name__ == '__main__':
     main()
