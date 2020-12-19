@@ -139,7 +139,8 @@ class Calculux(qw.QMainWindow):
         return
 
     def evaluate(self):
-        self.screen.setText(str(eval(self.screen.text())))
+        if len(self.screen.text()) > 0:
+            self.screen.setText(str(eval(self.screen.text())))
         return
 
     def clear(self):
