@@ -5,22 +5,6 @@ import PyQt5.QtWidgets as qw
 import PyQt5.QtGui as qg
 from PyQt5.QtCore import Qt
 
-""" Layout
-
-    0   1   2   3
-0   [           ]
-
-1   (   )   D   C
-
-2   7   8   9   *
-
-3   4   5   7   /
-
-4   1   2   3   +
-
-5   .   0   =   -
-"""
-
 
 @dataclass
 class Button:
