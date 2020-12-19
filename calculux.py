@@ -13,8 +13,10 @@ class Button:
     label_1: str
     connection_1: Callable[..., Any] = None
     label_2: str = ''
+    hidden_2: str = ''
     connection_2: Callable[..., Any] = None
     label_3: str = ''
+    hidden_3: str = ''
     connection_3: Callable[..., Any] = None
     ref_1: qw.QWidget = None
     ref_2: qw.QWidget = None
@@ -38,22 +40,22 @@ class Calculux(qw.QMainWindow):
         self._centralWidget.setLayout(self.grid)
 
         # create dictionary to hold all Button references
-        self.buttons = {Qt.Key_0: Button(4, 0, '0', None, 'Pi', None, 'e', None),
-                        Qt.Key_1: Button(3, 0, '1', None, 'tan', None, 'atan', None),
-                        Qt.Key_2: Button(3, 1, '2', None, '(', None, ')', None),
-                        Qt.Key_3: Button(3, 2, '3', None, ' ', self.noAction, ' ', self.noAction),
-                        Qt.Key_4: Button(2, 0, '4', None, 'cos', None, 'acos', None),
-                        Qt.Key_5: Button(2, 1, '5', None, 'MC', None, 'M', None),
-                        Qt.Key_6: Button(2, 2, '6', None, 'M+', None, 'M-', None),
-                        Qt.Key_7: Button(1, 0, '7', None, 'sin', None, 'asin', None),
-                        Qt.Key_8: Button(1, 1, '8', None, 'log10', None, 'ln', None),
-                        Qt.Key_9: Button(1, 2, '9', None, 'logx', None, ',', None),
-                        Qt.Key_Period: Button(4, 1, '.', None, 'E', None, '^2', None),
-                        Qt.Key_Asterisk: Button(1, 3, '*', None, '!', None, '^x', None),
-                        Qt.Key_Slash: Button(2, 3, '/', None, 'mod', None, 'deg/rad', None),
-                        Qt.Key_Plus: Button(3, 3, '+', None, 'sqrt', None, 'x-rt', None),
-                        Qt.Key_Minus: Button(4, 3, '-', None, 'abs', None, 'j', None),
-                        Qt.Key_Equal: Button(4, 2, '=', self.evaluate, 'C', self.clear, 'D', self.delete)}
+        self.buttons = {Qt.Key_0: Button(4, 0, '0', None, 'Pi', '', None, 'e', '', None),
+                        Qt.Key_1: Button(3, 0, '1', None, 'tan', '(', None, 'atan', '(', None),
+                        Qt.Key_2: Button(3, 1, '2', None, '(', '', None, ')', '', None),
+                        Qt.Key_3: Button(3, 2, '3', None, ' ', '', self.noAction, ' ', '', self.noAction),
+                        Qt.Key_4: Button(2, 0, '4', None, 'cos', '(', None, 'acos', '(', None),
+                        Qt.Key_5: Button(2, 1, '5', None, 'MC', '', None, 'M', '', None),
+                        Qt.Key_6: Button(2, 2, '6', None, 'M+', '', None, 'M-', '', None),
+                        Qt.Key_7: Button(1, 0, '7', None, 'sin', '(', None, 'asin', '(', None),
+                        Qt.Key_8: Button(1, 1, '8', None, 'log10', '(', None, 'ln', '(', None),
+                        Qt.Key_9: Button(1, 2, '9', None, 'logx', '(', None, ',', '', None),
+                        Qt.Key_Period: Button(4, 1, '.', None, 'E', '', None, '^2', '', None),
+                        Qt.Key_Asterisk: Button(1, 3, '*', None, '!', '', None, '^', '', None),
+                        Qt.Key_Slash: Button(2, 3, '/', None, 'mod', '(', None, 'deg/rad', '', None),
+                        Qt.Key_Plus: Button(3, 3, '+', None, 'sqrt', '(', None, 'x_rt', '(', None),
+                        Qt.Key_Minus: Button(4, 3, '-', None, 'abs', '(', None, 'j', '', None),
+                        Qt.Key_Equal: Button(4, 2, '=', self.evaluate, 'C', '', self.clear, 'D', '', self.delete)}
 
         # define key translations when multiple keys perform the same function
         self.keyTranslations = {Qt.Key_Enter: Qt.Key_Equal,
@@ -88,7 +90,7 @@ class Calculux(qw.QMainWindow):
                 # change this to add in top left
                 button.grid.addWidget(button.ref_2, 0, 0)
                 if button.connection_2 is None:
-                    button.ref_2.clicked.connect(self.buttonFactory(button.label_2))
+                    button.ref_2.clicked.connect(self.buttonFactory(button.label_2+button.hidden_2))
                 else:
                     button.ref_2.clicked.connect(button.connection_2)
 
@@ -98,7 +100,7 @@ class Calculux(qw.QMainWindow):
                 # change this to add in top left
                 button.grid.addWidget(button.ref_3, 0, 1)
                 if button.connection_3 is None:
-                    button.ref_3.clicked.connect(self.buttonFactory(button.label_3))
+                    button.ref_3.clicked.connect(self.buttonFactory(button.label_3+button.hidden_3))
                 else:
                     button.ref_3.clicked.connect(button.connection_3)
 
