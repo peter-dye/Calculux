@@ -1,6 +1,7 @@
 import sys
 from dataclasses import dataclass
 from typing import Callable, Any
+from math import sin, asin, cos, acos, tan, atan, sqrt, log, log10, fabs, pi, e
 import PyQt5.QtWidgets as qw
 import PyQt5.QtGui as qg
 from PyQt5.QtCore import Qt
@@ -40,21 +41,21 @@ class Calculux(qw.QMainWindow):
         self._centralWidget.setLayout(self.grid)
 
         # create dictionary to hold all Button references
-        self.buttons = {Qt.Key_0: Button(4, 0, '0', None, 'Pi', '', None, 'e', '', None),
+        self.buttons = {Qt.Key_0: Button(4, 0, '0', None, 'pi', '', None, 'e', '', None),
                         Qt.Key_1: Button(3, 0, '1', None, 'tan', '(', None, 'atan', '(', None),
                         Qt.Key_2: Button(3, 1, '2', None, '(', '', None, ')', '', None),
-                        Qt.Key_3: Button(3, 2, '3', None, ' ', '', self.noAction, ' ', '', self.noAction),
+                        Qt.Key_3: Button(3, 2, '3', None, 'PRE', '', None, ' ', '', self.noAction),
                         Qt.Key_4: Button(2, 0, '4', None, 'cos', '(', None, 'acos', '(', None),
-                        Qt.Key_5: Button(2, 1, '5', None, 'MC', '', None, 'M', '', None),
-                        Qt.Key_6: Button(2, 2, '6', None, 'M+', '', None, 'M-', '', None),
+                        Qt.Key_5: Button(2, 1, '5', None, 'MC', '', self.memory_clear, 'M', '', None),
+                        Qt.Key_6: Button(2, 2, '6', None, 'M+', '', self.memory_add, 'M-', '', self.memory_subtract),
                         Qt.Key_7: Button(1, 0, '7', None, 'sin', '(', None, 'asin', '(', None),
                         Qt.Key_8: Button(1, 1, '8', None, 'log10', '(', None, 'ln', '(', None),
-                        Qt.Key_9: Button(1, 2, '9', None, 'logx', '(', None, ',', '', None),
+                        Qt.Key_9: Button(1, 2, '9', None, 'log', '(', None, ',', '', None),
                         Qt.Key_Period: Button(4, 1, '.', None, 'E', '', None, '^2', '', None),
                         Qt.Key_Asterisk: Button(1, 3, '*', None, '!', '', None, '^', '', None),
                         Qt.Key_Slash: Button(2, 3, '/', None, 'mod', '(', None, 'deg/rad', '', None),
                         Qt.Key_Plus: Button(3, 3, '+', None, 'sqrt', '(', None, 'x_rt', '(', None),
-                        Qt.Key_Minus: Button(4, 3, '-', None, 'abs', '(', None, 'j', '', None),
+                        Qt.Key_Minus: Button(4, 3, '-', None, 'abs', '(', None, 'i', '', None),
                         Qt.Key_Equal: Button(4, 2, '=', self.evaluate, 'C', '', self.clear, 'D', '', self.delete)}
 
         # define key translations when multiple keys perform the same function
@@ -104,6 +105,10 @@ class Calculux(qw.QMainWindow):
                 else:
                     button.ref_3.clicked.connect(button.connection_3)
 
+        # initialize memory and previous result
+        self.memory = 0
+        self.previous_result = ''
+
         return
 
     def keyPressEvent(self, event):
@@ -141,14 +146,35 @@ class Calculux(qw.QMainWindow):
         return
 
     def evaluate(self):
-        if len(self.screen.text()) > 0 and self.screen.text() != 'ERROR':
+        expression = self.screen.text()
+
+        if len(expression) > 0 and expression != 'ERROR':
+            expression = self.parse(expression)
+
             try:
-                result = eval(self.screen.text())
+                result = eval(expression)
             except SyntaxError:
                 self.screen.setText('ERROR')
             else:
-                self.screen.setText(str(result))
+                result = str(result)
+                result = result.replace('e', 'E')
+                self.screen.setText(result)
+                self.previous_result = result
         return
+
+    def parse(self, expression: str) -> str:
+        expression = expression.replace('abs(', 'fabs(')
+        expression = expression.replace('PRE', self.previous_result)
+        expression = expression.replace('ln(', 'self.ln(')
+        expression = expression.replace('E', '*10**')
+        expression = expression.replace('^', '**')
+        expression = expression.replace('x_rt(', 'self.x_rt(')
+        expression = expression.replace('mod(', 'self.mod(')
+        expression = expression.replace('M', str(self.memory_get()))
+
+        # TODO: will need more complex work for factorial
+
+        return expression
 
     def clear(self):
         self.screen.setText('')
@@ -159,6 +185,35 @@ class Calculux(qw.QMainWindow):
         return
 
     def noAction(self):
+        return
+
+    def ln(self, x):
+        return log(x, e)
+
+    def x_rt(self, x, expr):
+        return expr ** (1.0/x)
+
+    def mod(self, x, expr):
+        return expr % x
+
+    def factorial(self, x):
+        return
+
+    def memory_clear(self):
+        self.memory = 0
+        return
+
+    def memory_get(self):
+        return self.memory
+
+    def memory_add(self):
+        self.evaluate()
+        self.memory += float(self.screen.text())
+        return
+
+    def memory_subtract(self):
+        self.evaluate()
+        self.memory -= float(self.screen.text())
         return
 
 
