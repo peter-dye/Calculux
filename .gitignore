@@ -88,3 +88,6 @@ venv.bak/
 
 # MacOS specific
 *.DS_Store
+
+# Personal
+notes
