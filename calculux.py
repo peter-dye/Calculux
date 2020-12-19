@@ -21,7 +21,7 @@ class Button:
     ref_3: qw.QWidget = None
 
 
-class UserInterface(qw.QMainWindow):
+class Calculux(qw.QMainWindow):
 
     def __init__(self):
         super().__init__()
@@ -152,7 +152,7 @@ class UserInterface(qw.QMainWindow):
 
 def main():
     calculux = qw.QApplication(sys.argv)
-    view = UserInterface()
+    view = Calculux()
     view.show()
     sys.exit(calculux.exec_())
 
