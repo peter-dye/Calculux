@@ -3,7 +3,6 @@ from dataclasses import dataclass
 from typing import Callable, Any
 from math import sin, asin, cos, acos, tan, atan, sqrt, log, log10, fabs, pi, e
 import PyQt5.QtWidgets as qw
-import PyQt5.QtGui as qg
 from PyQt5.QtCore import Qt
 
 
@@ -34,10 +33,17 @@ class Calculux(qw.QMainWindow):
 
         # setup the central widget
         self._centralWidget = qw.QWidget(self)
+        self._centralWidget.setMinimumSize(500, 309)
         self.setCentralWidget(self._centralWidget)
 
-        # create the layout
+        # load in the styele sheet
+        with open('stylesheet.qss', 'r') as stylesheet:
+            self.setStyleSheet(stylesheet.read())
+
+        # create the layout and assign it to the central widget
         self.grid = qw.QGridLayout()
+        self.grid.setHorizontalSpacing(0)
+        self.grid.setVerticalSpacing(0)
         self._centralWidget.setLayout(self.grid)
 
         # create dictionary to hold all Button references
@@ -77,6 +83,8 @@ class Calculux(qw.QMainWindow):
             # Buttons must have at least one function so create the first
             # reference, add it to the grid, and connect the functionality
             button.ref_1 = qw.QPushButton(text=button.label_1)
+            button.ref_1.setFlat(True)
+            button.ref_1.setSizePolicy(qw.QSizePolicy.Expanding, qw.QSizePolicy.Expanding)
             button.grid.addWidget(button.ref_1, 1, 0, 1, 2)
             if button.connection_1 is None:
                 # connect default functionality (insert)
@@ -88,7 +96,8 @@ class Calculux(qw.QMainWindow):
             # add the second function if applicable
             if len(button.label_2) > 0:
                 button.ref_2 = qw.QPushButton(text=button.label_2)
-                # change this to add in top left
+                button.ref_2.setFlat(True)
+                button.ref_2.setSizePolicy(qw.QSizePolicy.Expanding, qw.QSizePolicy.Expanding)
                 button.grid.addWidget(button.ref_2, 0, 0)
                 if button.connection_2 is None:
                     button.ref_2.clicked.connect(self.buttonFactory(button.label_2+button.hidden_2))
@@ -98,7 +107,8 @@ class Calculux(qw.QMainWindow):
             # add the third function if applicable
             if len(button.label_3) > 0:
                 button.ref_3 = qw.QPushButton(text=button.label_3)
-                # change this to add in top left
+                button.ref_3.setFlat(True)
+                button.ref_3.setSizePolicy(qw.QSizePolicy.Expanding, qw.QSizePolicy.Expanding)
                 button.grid.addWidget(button.ref_3, 0, 1)
                 if button.connection_3 is None:
                     button.ref_3.clicked.connect(self.buttonFactory(button.label_3+button.hidden_3))
