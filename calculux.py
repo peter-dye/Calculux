@@ -19,6 +19,7 @@ class Button:
     ref_1: qw.QWidget = None
     ref_2: qw.QWidget = None
     ref_3: qw.QWidget = None
+    grid: qw.QGridLayout = None
 
 
 class Calculux(qw.QMainWindow):
@@ -36,27 +37,23 @@ class Calculux(qw.QMainWindow):
         self.grid = qw.QGridLayout()
         self._centralWidget.setLayout(self.grid)
 
-        # create dictionary to hold all button references
-        self.buttons = {Qt.Key_0: Button(5, 1, '0'),
-                        Qt.Key_1: Button(4, 0, '1'),
-                        Qt.Key_2: Button(4, 1, '2'),
-                        Qt.Key_3: Button(4, 2, '3'),
-                        Qt.Key_4: Button(3, 0, '4'),
-                        Qt.Key_5: Button(3, 1, '5'),
-                        Qt.Key_6: Button(3, 2, '6'),
-                        Qt.Key_7: Button(2, 0, '7'),
-                        Qt.Key_8: Button(2, 1, '8'),
-                        Qt.Key_9: Button(2, 2, '9'),
-                        Qt.Key_Period: Button(5, 0, '.'),
-                        Qt.Key_ParenLeft: Button(1, 0, '('),
-                        Qt.Key_ParenRight: Button(1, 1, ')'),
-                        Qt.Key_Asterisk: Button(2, 3, '*'),
-                        Qt.Key_Slash: Button(3, 3, '/'),
-                        Qt.Key_Plus: Button(4, 3, '+'),
-                        Qt.Key_Minus: Button(5, 3, '-'),
-                        Qt.Key_Equal: Button(5, 2, '=', self.evaluate),
-                        Qt.Key_C: Button(1, 3, 'C', self.clear),
-                        Qt.Key_D: Button(1, 2, 'D', self.delete)}
+        # create dictionary to hold all Button references
+        self.buttons = {Qt.Key_0: Button(4, 0, '0', None, 'Pi', None, 'e', None),
+                        Qt.Key_1: Button(3, 0, '1', None, 'tan', None, 'atan', None),
+                        Qt.Key_2: Button(3, 1, '2', None, '(', None, ')', None),
+                        Qt.Key_3: Button(3, 2, '3', None, ' ', self.noAction, ' ', self.noAction),
+                        Qt.Key_4: Button(2, 0, '4', None, 'cos', None, 'acos', None),
+                        Qt.Key_5: Button(2, 1, '5', None, 'MC', None, 'M', None),
+                        Qt.Key_6: Button(2, 2, '6', None, 'M+', None, 'M-', None),
+                        Qt.Key_7: Button(1, 0, '7', None, 'sin', None, 'asin', None),
+                        Qt.Key_8: Button(1, 1, '8', None, 'log10', None, 'ln', None),
+                        Qt.Key_9: Button(1, 2, '9', None, 'logx', None, ',', None),
+                        Qt.Key_Period: Button(4, 1, '.', None, 'E', None, '^2', None),
+                        Qt.Key_Asterisk: Button(1, 3, '*', None, '!', None, '^x', None),
+                        Qt.Key_Slash: Button(2, 3, '/', None, 'mod', None, 'deg/rad', None),
+                        Qt.Key_Plus: Button(3, 3, '+', None, 'sqrt', None, 'x-rt', None),
+                        Qt.Key_Minus: Button(4, 3, '-', None, 'abs', None, 'j', None),
+                        Qt.Key_Equal: Button(4, 2, '=', self.evaluate, 'C', self.clear, 'D', self.delete)}
 
         # define key translations when multiple keys perform the same function
         self.keyTranslations = {Qt.Key_Enter: Qt.Key_Equal,
@@ -70,10 +67,14 @@ class Calculux(qw.QMainWindow):
 
         # create the buttons
         for button in self.buttons.values():
+            # create subgrid for button and add it to the main grid
+            button.grid = qw.QGridLayout()
+            self.grid.addLayout(button.grid, button.row, button.col)
+
             # Buttons must have at least one function so create the first
             # reference, add it to the grid, and connect the functionality
             button.ref_1 = qw.QPushButton(text=button.label_1)
-            self.grid.addWidget(button.ref_1, button.row, button.col)
+            button.grid.addWidget(button.ref_1, 1, 0, 1, 2)
             if button.connection_1 is None:
                 # connect default functionality (insert)
                 button.ref_1.clicked.connect(self.buttonFactory(button.label_1))
@@ -85,7 +86,7 @@ class Calculux(qw.QMainWindow):
             if len(button.label_2) > 0:
                 button.ref_2 = qw.QPushButton(text=button.label_2)
                 # change this to add in top left
-                self.grid.addWidget(button.ref_2, button.row, button.col)
+                button.grid.addWidget(button.ref_2, 0, 0)
                 if button.connection_2 is None:
                     button.ref_2.clicked.connect(self.buttonFactory(button.label_2))
                 else:
@@ -95,7 +96,7 @@ class Calculux(qw.QMainWindow):
             if len(button.label_3) > 0:
                 button.ref_3 = qw.QPushButton(text=button.label_3)
                 # change this to add in top left
-                self.grid.addWidget(button.ref_3, button.row, button.col)
+                button.grid.addWidget(button.ref_3, 0, 1)
                 if button.connection_3 is None:
                     button.ref_3.clicked.connect(self.buttonFactory(button.label_3))
                 else:
@@ -116,10 +117,10 @@ class Calculux(qw.QMainWindow):
 
             # use modifiers() to determine which reference to animateClick on
             # and therefore which function to perform
-            if event.modifiers() & Qt.ControlModifier and button.ref_2 is not None:
+            if event.modifiers() & Qt.AltModifier and button.ref_2 is not None:
                 # second function
                 button.ref_2.animateClick()
-            elif event.modifiers() & Qt.AltModifier and button.ref_3 is not None:
+            elif event.modifiers() & Qt.ControlModifier and button.ref_3 is not None:
                 # third function
                 button.ref_3.animateClick()
             else:
@@ -147,6 +148,9 @@ class Calculux(qw.QMainWindow):
 
     def delete(self):
         self.screen.setText(self.screen.text()[:-1])
+        return
+
+    def noAction(self):
         return
 
 
