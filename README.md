@@ -5,6 +5,9 @@ This is a small project I started because current desktop calculator apps were n
 
 The plan for this project in the longer term is to expand the functionality beyond normal math functions and provide additional features such as unit conversions, data and time calculations, as well as arithmetic in, and conversion to, alternative bases.
 
+Here is the idea for the project that I am currently working towards:
+![calculator layout](./resource/layout.png)
+
 Short term features that I plan to implement include:
 - Second and Third functions for most buttons (things like powers, roots, trig, etc)
 - Edit arbitrary areas of the display and navigate with arrow keys instead only being able to edit the right-most character
