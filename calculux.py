@@ -86,11 +86,11 @@ class Calculux(qw.QMainWindow):
 
             # add the second function if applicable
             if len(button.label_2) > 0:
-                button.label_2 = self.createButtonFunction(button.grid, button.label_2, button.connection_2, 'SECOND', button.hidden_2)
+                button.ref_2 = self.createButtonFunction(button.grid, button.label_2, button.connection_2, 'SECOND', button.hidden_2)
 
             # add the third function if applicable
             if len(button.label_3) > 0:
-                button.label_3 = self.createButtonFunction(button.grid, button.label_3, button.connection_3, 'THIRD', button.hidden_3)
+                button.ref_3 = self.createButtonFunction(button.grid, button.label_3, button.connection_3, 'THIRD', button.hidden_3)
 
         # initialize memory and previous result
         self.memory = 0
