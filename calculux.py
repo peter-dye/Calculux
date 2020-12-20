@@ -51,7 +51,7 @@ class Calculux(qw.QMainWindow):
         self.buttons = {Qt.Key_0: Button(4, 0, '0', None, 'pi', '', None, 'e', '', None),
                         Qt.Key_1: Button(3, 0, '1', None, 'tan', '(', None, 'atan', '(', None),
                         Qt.Key_2: Button(3, 1, '2', None, '(', '', None, ')', '', None),
-                        Qt.Key_3: Button(3, 2, '3', None, 'PRE', '', None, ' ', '', self.noAction),
+                        Qt.Key_3: Button(3, 2, '3', None, 'PRV', '', None, ' ', '', self.noAction),
                         Qt.Key_4: Button(2, 0, '4', None, 'cos', '(', None, 'acos', '(', None),
                         Qt.Key_5: Button(2, 1, '5', None, 'MC', '', self.memory_clear, 'M', '', None),
                         Qt.Key_6: Button(2, 2, '6', None, 'M+', '', self.memory_add, 'M-', '', self.memory_subtract),
@@ -183,8 +183,8 @@ class Calculux(qw.QMainWindow):
 
     def parse(self, expression: str) -> str:
         expression = expression.replace('abs', 'fabs')
-        expression = expression.replace('PRE', self.previous_result)
         expression = expression.replace('fact', 'self.factorial')
+        expression = expression.replace('PRV', self.previous_result)
         expression = expression.replace('ln', 'self.ln')
         expression = expression.replace('E', '*10**')
         expression = expression.replace('^', '**')
