@@ -11,5 +11,5 @@ setup(
     console=APP,
     data_files=DATA_FILES,
     options={'py2eze': OPTIONS},
-    setup_requires=['py2app']
+    setup_requires=['py2exe']
 )
