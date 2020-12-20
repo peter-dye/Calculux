@@ -171,13 +171,13 @@ class Calculux(qw.QMainWindow):
         return
 
     def parse(self, expression: str) -> str:
-        expression = expression.replace('abs(', 'fabs(')
+        expression = expression.replace('abs', 'fabs')
         expression = expression.replace('PRE', self.previous_result)
-        expression = expression.replace('ln(', 'self.ln(')
+        expression = expression.replace('ln', 'self.ln')
         expression = expression.replace('E', '*10**')
         expression = expression.replace('^', '**')
-        expression = expression.replace('x_rt(', 'self.x_rt(')
-        expression = expression.replace('mod(', 'self.mod(')
+        expression = expression.replace('x_rt', 'self.x_rt')
+        expression = expression.replace('mod', 'self.mod')
         expression = expression.replace('M', str(self.memory_get()))
 
         # TODO: will need more complex work for factorial
