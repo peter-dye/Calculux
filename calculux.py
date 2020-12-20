@@ -32,11 +32,12 @@ class Calculux(qw.QMainWindow):
         self.setWindowTitle('Calculux')
 
         # setup the central widget
-        self._centralWidget = qw.QWidget(self)
-        self._centralWidget.setMinimumSize(500, 309)
-        self.setCentralWidget(self._centralWidget)
+        self.centralWidget = qw.QWidget(self)
+        self.centralWidget.setMinimumSize(500, 500)
+        self.centralWidget.setObjectName('centralWidget')
+        self.setCentralWidget(self.centralWidget)
 
-        # load in the styele sheet
+        # load in the style sheet
         with open('stylesheet.qss', 'r') as stylesheet:
             self.setStyleSheet(stylesheet.read())
 
@@ -44,7 +45,7 @@ class Calculux(qw.QMainWindow):
         self.grid = qw.QGridLayout()
         self.grid.setHorizontalSpacing(0)
         self.grid.setVerticalSpacing(0)
-        self._centralWidget.setLayout(self.grid)
+        self.centralWidget.setLayout(self.grid)
 
         # create dictionary to hold all Button references
         self.buttons = {Qt.Key_0: Button(4, 0, '0', None, 'pi', '', None, 'e', '', None),
@@ -59,7 +60,7 @@ class Calculux(qw.QMainWindow):
                         Qt.Key_9: Button(1, 2, '9', None, 'log', '(', None, ',', '', None),
                         Qt.Key_Period: Button(4, 1, '.', None, 'E', '', None, '^2', '', None),
                         Qt.Key_Asterisk: Button(1, 3, '*', None, '!', '', None, '^', '', None),
-                        Qt.Key_Slash: Button(2, 3, '/', None, 'mod', '(', None, 'deg/rad', '', None),
+                        Qt.Key_Slash: Button(2, 3, '/', None, 'mod', '(', None, 'rad', '', None),
                         Qt.Key_Plus: Button(3, 3, '+', None, 'sqrt', '(', None, 'x_rt', '(', None),
                         Qt.Key_Minus: Button(4, 3, '-', None, 'abs', '(', None, 'i', '', None),
                         Qt.Key_Equal: Button(4, 2, '=', self.evaluate, 'C', '', self.clear, 'D', '', self.delete)}
@@ -72,6 +73,7 @@ class Calculux(qw.QMainWindow):
         self.screen = qw.QLineEdit()
         self.screen.setAlignment(Qt.AlignRight)
         self.screen.setReadOnly(True)
+        self.screen.setMinimumHeight(60)
         self.grid.addWidget(self.screen, 0, 0, 1, 4)
 
         # create the buttons
