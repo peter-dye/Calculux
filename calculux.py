@@ -82,38 +82,15 @@ class Calculux(qw.QMainWindow):
 
             # Buttons must have at least one function so create the first
             # reference, add it to the grid, and connect the functionality
-            button.ref_1 = qw.QPushButton(text=button.label_1)
-            button.ref_1.setFlat(True)
-            button.ref_1.setSizePolicy(qw.QSizePolicy.Expanding, qw.QSizePolicy.Expanding)
-            button.grid.addWidget(button.ref_1, 1, 0, 1, 2)
-            if button.connection_1 is None:
-                # connect default functionality (insert)
-                button.ref_1.clicked.connect(self.buttonFactory(button.label_1))
-            else:
-                # connect special functionality that is already defined in dict
-                button.ref_1.clicked.connect(button.connection_1)
+            button.ref_1 = self.createButtonFunction(button.grid, button.label_1, button.connection_1, 'FIRST')
 
             # add the second function if applicable
             if len(button.label_2) > 0:
-                button.ref_2 = qw.QPushButton(text=button.label_2)
-                button.ref_2.setFlat(True)
-                button.ref_2.setSizePolicy(qw.QSizePolicy.Expanding, qw.QSizePolicy.Expanding)
-                button.grid.addWidget(button.ref_2, 0, 0)
-                if button.connection_2 is None:
-                    button.ref_2.clicked.connect(self.buttonFactory(button.label_2+button.hidden_2))
-                else:
-                    button.ref_2.clicked.connect(button.connection_2)
+                button.label_2 = self.createButtonFunction(button.grid, button.label_2, button.connection_2, 'SECOND', button.hidden_2)
 
             # add the third function if applicable
             if len(button.label_3) > 0:
-                button.ref_3 = qw.QPushButton(text=button.label_3)
-                button.ref_3.setFlat(True)
-                button.ref_3.setSizePolicy(qw.QSizePolicy.Expanding, qw.QSizePolicy.Expanding)
-                button.grid.addWidget(button.ref_3, 0, 1)
-                if button.connection_3 is None:
-                    button.ref_3.clicked.connect(self.buttonFactory(button.label_3+button.hidden_3))
-                else:
-                    button.ref_3.clicked.connect(button.connection_3)
+                button.label_3 = self.createButtonFunction(button.grid, button.label_3, button.connection_3, 'THIRD', button.hidden_3)
 
         # initialize memory and previous result
         self.memory = 0
@@ -145,6 +122,27 @@ class Calculux(qw.QMainWindow):
                 button.ref_1.animateClick()
 
         return
+
+    def createButtonFunction(self, grid, label, connection, function, hidden=''):
+        ref = qw.QPushButton(text=label)
+        ref.setFlat(True)
+        ref.setSizePolicy(qw.QSizePolicy.Expanding, qw.QSizePolicy.Expanding)
+
+        if function == 'FIRST':
+            grid.addWidget(ref, 1, 0, 1, 2)
+        elif function == 'SECOND':
+            grid.addWidget(ref, 0, 0)
+        elif function == 'THIRD':
+            grid.addWidget(ref, 0, 1)
+
+        if connection is None:
+            # connect default functionality (insert)
+            ref.clicked.connect(self.buttonFactory(label+hidden))
+        else:
+            # connect special functionality that is already defined in dict
+            ref.clicked.connect(connection)
+
+        return ref
 
     def buttonFactory(self, text):
         def f():
