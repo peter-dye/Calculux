@@ -97,6 +97,7 @@ class Calculux(qw.QMainWindow):
         # initialize memory and previous result
         self.memory = 0
         self.previous_result = ''
+        self.last_operation_was_evaluate = False
 
         return
 
@@ -152,7 +153,12 @@ class Calculux(qw.QMainWindow):
         return f
 
     def insert(self, text):
+        if self.last_operation_was_evaluate:
+            self.screen.setText('')
+            self.last_operation_was_evaluate = False
+
         self.screen.setText(self.screen.text() + text)
+
         return
 
     def evaluate(self):
@@ -170,6 +176,9 @@ class Calculux(qw.QMainWindow):
                 result = result.replace('e', 'E')
                 self.screen.setText(result)
                 self.previous_result = result
+
+        self.last_operation_was_evaluate = True
+
         return
 
     def parse(self, expression: str) -> str:
