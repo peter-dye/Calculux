@@ -1,7 +1,7 @@
 import sys
 from dataclasses import dataclass
 from typing import Callable, Any
-from math import sin, asin, cos, acos, tan, atan, sqrt, log, log10, fabs, pi, e
+from math import sin, asin, cos, acos, tan, atan, sqrt, log, log10, fabs, factorial, pi, e
 import PyQt5.QtWidgets as qw
 from PyQt5.QtCore import Qt
 
@@ -59,7 +59,7 @@ class Calculux(qw.QMainWindow):
                         Qt.Key_8: Button(1, 1, '8', None, 'log10', '(', None, 'ln', '(', None),
                         Qt.Key_9: Button(1, 2, '9', None, 'log', '(', None, ',', '', None),
                         Qt.Key_Period: Button(4, 1, '.', None, 'E', '', None, '^2', '', None),
-                        Qt.Key_Asterisk: Button(1, 3, '*', None, '!', '', None, '^', '', None),
+                        Qt.Key_Asterisk: Button(1, 3, '*', None, 'fact', '(', None, '^', '', None),
                         Qt.Key_Slash: Button(2, 3, '/', None, 'mod', '(', None, 'rad', '', None),
                         Qt.Key_Plus: Button(3, 3, '+', None, 'sqrt', '(', None, 'x_rt', '(', None),
                         Qt.Key_Minus: Button(4, 3, '-', None, 'abs', '(', None, 'i', '', None),
@@ -175,15 +175,13 @@ class Calculux(qw.QMainWindow):
     def parse(self, expression: str) -> str:
         expression = expression.replace('abs', 'fabs')
         expression = expression.replace('PRE', self.previous_result)
+        expression = expression.replace('fact', 'self.factorial')
         expression = expression.replace('ln', 'self.ln')
         expression = expression.replace('E', '*10**')
         expression = expression.replace('^', '**')
         expression = expression.replace('x_rt', 'self.x_rt')
         expression = expression.replace('mod', 'self.mod')
         expression = expression.replace('M', str(self.memory_get()))
-
-        # TODO: will need more complex work for factorial
-
         return expression
 
     def clear(self):
@@ -207,7 +205,7 @@ class Calculux(qw.QMainWindow):
         return expr % x
 
     def factorial(self, x):
-        return
+        return factorial(int(x))
 
     def memory_clear(self):
         self.memory = 0
