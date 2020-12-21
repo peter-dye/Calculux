@@ -1,14 +1,13 @@
 from distutils.core import setup
 import py2exe
 
-APP = ['calculux.py']
 DATA_FILES = [('', ['stylesheet.qss'])]
 OPTIONS = {
-    # 'iconfile':'resources/icon.icns',
+    # 'iconfile':'resources/icon.ico',
 }
 
 setup(
-    windows=APP,
+    windows={'script': 'calculux.py'},
     data_files=DATA_FILES,
-    options={'py2eze': OPTIONS}
+    options={'py2exe': OPTIONS}
 )
