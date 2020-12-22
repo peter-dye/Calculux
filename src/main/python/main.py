@@ -261,7 +261,6 @@ class Calculux(qw.QMainWindow):
 
 def main():
     appctxt = ApplicationContext()
-    calculux = qw.QApplication(sys.argv)
     view = Calculux()
     view.show()
     exit_code = appctxt.app.exec_()
