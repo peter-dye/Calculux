@@ -28,8 +28,10 @@ class Button:
 
 class Calculux(qw.QMainWindow):
 
-    def __init__(self):
+    def __init__(self, appctxt):
         super().__init__()
+
+        self.appctxt = appctxt
 
         self.setWindowTitle('Calculux')
 
@@ -40,7 +42,7 @@ class Calculux(qw.QMainWindow):
         self.setCentralWidget(self.centralWidget)
 
         # load in the style sheet
-        with open('./src/main/resources/stylesheet.qss', 'r') as stylesheet:
+        with open(self.appctxt.get_resource('stylesheet.qss'), 'r') as stylesheet:
             self.setStyleSheet(stylesheet.read())
 
         # create the layout and assign it to the central widget
@@ -261,7 +263,7 @@ class Calculux(qw.QMainWindow):
 
 def main():
     appctxt = ApplicationContext()
-    view = Calculux()
+    view = Calculux(appctxt)
     view.show()
     exit_code = appctxt.app.exec_()
     sys.exit(exit_code)
