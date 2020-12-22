@@ -17,12 +17,14 @@ Checkout what the project looks like right now!
 ![calculator app screenshot](resources/screenshot.png)
 
 Short term features that I plan to implement include:
-- Be able to switch between radians and degrees, currently radians is the only option
-- Edit arbitrary areas of the display and navigate with arrow keys instead only being able to edit the right-most character
-- Have one display for the expression and one display for the result
-- map multiple keys that have the same function to the main key for that function
-- Longer history instead of just one previous result
-- Saving setting between sessions (e.g. history, rad or deg setting, etc)
-- Documentation on how to use certain functions that are a bit out of the ordinary (e.g. mod, log, x_rt, etc)
+- [ ] Be able to switch between radians and degrees, currently radians is the only option
+- [ ] Edit arbitrary areas of the display and navigate with arrow keys instead only being able to edit the right-most character
+- [ ] Have one display for the expression and one display for the result
+- [x] map multiple keys that have the same function to the main key for that function
+- [ ] Longer history instead of just one previous result
+- [ ] Saving setting between sessions (e.g. history, rad or deg setting, etc)
+- [ ] Documentation on how to use certain functions that are a bit out of the ordinary (e.g. mod, log, x_rt, etc)
+- [ ] adjustable number of significant figures
+- [ ] display fractions for decimals that can be exactly represented (and the symbol pi instead of the number)
 
 This project is written in Python and uses Qt through PyQt5 for the GUI. If you are interested in contributing, I'm always open to pull requests. If you notice a bug, please open an issue, or fix it and submit a pull request.
