@@ -119,7 +119,7 @@ class Calculux(qw.QMainWindow):
 
         return
 
-    def keyPressEvent(self, orig_event):
+    def keyPressEvent(self, orig_event: QKeyEvent) -> None:
         # check if this key needs to be translated
         if orig_event.key() in self.keyTranslations:
             event = self.keyTranslations[orig_event.key()]
@@ -148,7 +148,7 @@ class Calculux(qw.QMainWindow):
 
         return
 
-    def createButtonFunction(self, grid, label, connection, function, hidden=''):
+    def createButtonFunction(self, grid: qw.QGridLayout, label: str, connection: Callable, function: str, hidden='') -> Callable:
         ref = qw.QPushButton(text=label)
         ref.setFlat(True)
         ref.setSizePolicy(qw.QSizePolicy.Expanding, qw.QSizePolicy.Expanding)
@@ -169,12 +169,12 @@ class Calculux(qw.QMainWindow):
 
         return ref
 
-    def buttonFactory(self, text):
+    def buttonFactory(self, text: str) -> Callable:
         def f():
             self.insert(text)
         return f
 
-    def insert(self, text):
+    def insert(self, text: str) -> None:
         if self.last_operation_was_evaluate:
             self.screen.setText('')
             self.last_operation_was_evaluate = False
@@ -183,7 +183,7 @@ class Calculux(qw.QMainWindow):
 
         return
 
-    def evaluate(self):
+    def evaluate(self) -> None:
         expression = self.screen.text()
 
         if len(expression) > 0 and expression != 'ERROR':
@@ -215,43 +215,43 @@ class Calculux(qw.QMainWindow):
         expression = expression.replace('M', str(self.memory_get()))
         return expression
 
-    def clear(self):
+    def clear(self) -> None:
         self.screen.setText('')
         return
 
-    def delete(self):
+    def delete(self) -> None:
         self.screen.setText(self.screen.text()[:-1])
         return
 
-    def noAction(self):
+    def noAction(self) -> None:
         return
 
-    def ln(self, x):
+    def ln(self, x: float) -> float:
         return log(x, e)
 
-    def x_rt(self, x, expr):
+    def x_rt(self, x: float, expr: float) -> float:
         return expr ** (1.0/x)
 
-    def mod(self, x, expr):
+    def mod(self, x: int, expr: int):
         return expr % x
 
-    def factorial(self, x):
-        return factorial(int(x))
+    def factorial(self, x: int) -> int:
+        return factorial(x)
 
-    def memory_clear(self):
+    def memory_clear(self) -> None:
         self.memory = 0
         return
 
-    def memory_get(self):
+    def memory_get(self) -> float:
         return self.memory
 
-    def memory_add(self):
+    def memory_add(self) -> None:
         self.evaluate()
         if self.screen.text() != 'ERROR':
             self.memory += float(self.screen.text())
         return
 
-    def memory_subtract(self):
+    def memory_subtract(self) -> None:
         self.evaluate()
         if self.screen.text() != 'ERROR':
             self.memory -= float(self.screen.text())
