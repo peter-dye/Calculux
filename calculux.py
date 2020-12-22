@@ -49,40 +49,43 @@ class Calculux(qw.QMainWindow):
         self.centralWidget.setLayout(self.grid)
 
         # create dictionary to hold all Button references
-        self.buttons = {Qt.Key_0: Button(4, 0, '0', None, 'pi', '', None, 'e', '', None),
-                        Qt.Key_1: Button(3, 0, '1', None, 'tan', '(', None, 'atan', '(', None),
-                        Qt.Key_2: Button(3, 1, '2', None, '(', '', None, ')', '', None),
-                        Qt.Key_3: Button(3, 2, '3', None, 'PRV', '', None, ' ', '', self.noAction),
-                        Qt.Key_4: Button(2, 0, '4', None, 'cos', '(', None, 'acos', '(', None),
-                        Qt.Key_5: Button(2, 1, '5', None, 'MC', '', self.memory_clear, 'M', '', None),
-                        Qt.Key_6: Button(2, 2, '6', None, 'M+', '', self.memory_add, 'M-', '', self.memory_subtract),
-                        Qt.Key_7: Button(1, 0, '7', None, 'sin', '(', None, 'asin', '(', None),
-                        Qt.Key_8: Button(1, 1, '8', None, 'log10', '(', None, 'ln', '(', None),
-                        Qt.Key_9: Button(1, 2, '9', None, 'log', '(', None, ',', '', None),
-                        Qt.Key_Period: Button(4, 1, '.', None, 'E', '', None, '^2', '', None),
-                        Qt.Key_Asterisk: Button(1, 3, '*', None, 'fact', '(', None, '^', '', None),
-                        Qt.Key_Slash: Button(2, 3, '/', None, 'mod', '(', None, 'rad', '', None),
-                        Qt.Key_Plus: Button(3, 3, '+', None, 'sqrt', '(', None, 'x_rt', '(', None),
-                        Qt.Key_Minus: Button(4, 3, '-', None, 'abs', '(', None, 'i', '', None),
-                        Qt.Key_Equal: Button(4, 2, '=', self.evaluate, 'C', '', self.clear, 'D', '', self.delete)}
+        self.buttons = {
+            Qt.Key_0: Button(4, 0, '0', None, 'pi', '', None, 'e', '', None),
+            Qt.Key_1: Button(3, 0, '1', None, 'tan', '(', None, 'atan', '(', None),
+            Qt.Key_2: Button(3, 1, '2', None, '(', '', None, ')', '', None),
+            Qt.Key_3: Button(3, 2, '3', None, 'PRV', '', None, ' ', '', self.noAction),
+            Qt.Key_4: Button(2, 0, '4', None, 'cos', '(', None, 'acos', '(', None),
+            Qt.Key_5: Button(2, 1, '5', None, 'MC', '', self.memory_clear, 'M', '', None),
+            Qt.Key_6: Button(2, 2, '6', None, 'M+', '', self.memory_add, 'M-', '', self.memory_subtract),
+            Qt.Key_7: Button(1, 0, '7', None, 'sin', '(', None, 'asin', '(', None),
+            Qt.Key_8: Button(1, 1, '8', None, 'log10', '(', None, 'ln', '(', None),
+            Qt.Key_9: Button(1, 2, '9', None, 'log', '(', None, ',', '', None),
+            Qt.Key_Period: Button(4, 1, '.', None, 'E', '', None, '^2', '', None),
+            Qt.Key_Asterisk: Button(1, 3, '*', None, 'fact', '(', None, '^', '', None),
+            Qt.Key_Slash: Button(2, 3, '/', None, 'mod', '(', None, 'rad', '', None),
+            Qt.Key_Plus: Button(3, 3, '+', None, 'sqrt', '(', None, 'x_rt', '(', None),
+            Qt.Key_Minus: Button(4, 3, '-', None, 'abs', '(', None, 'i', '', None),
+            Qt.Key_Equal: Button(4, 2, '=', self.evaluate, 'C', '', self.clear, 'D', '', self.delete)
+        }
 
         # define key translations when multiple keys perform the same function
-        self.keyTranslations = {Qt.Key_Enter: QKeyEvent(QEvent.KeyPress, Qt.Key_Equal, Qt.NoModifier),
-                                Qt.Key_Return: QKeyEvent(QEvent.KeyPress, Qt.Key_Equal, Qt.NoModifier),
-                                Qt.Key_Exclam: QKeyEvent(QEvent.KeyPress, Qt.Key_Asterisk, Qt.AltModifier),
-                                Qt.Key_Percent: QKeyEvent(QEvent.KeyPress, Qt.Key_Slash, Qt.AltModifier),
-                                Qt.Key_ParenLeft: QKeyEvent(QEvent.KeyPress, Qt.Key_2, Qt.AltModifier),
-                                Qt.Key_ParenRight: QKeyEvent(QEvent.KeyPress, Qt.Key_2, Qt.ControlModifier),
-                                Qt.Key_S: QKeyEvent(QEvent.KeyPress, Qt.Key_7, Qt.AltModifier),
-                                Qt.Key_C: QKeyEvent(QEvent.KeyPress, Qt.Key_4, Qt.AltModifier),
-                                Qt.Key_T: QKeyEvent(QEvent.KeyPress, Qt.Key_1, Qt.AltModifier),
-                                Qt.Key_Escape: QKeyEvent(QEvent.KeyPress, Qt.Key_Equal, Qt.AltModifier),
-                                # Qt.Key_Delete: QKeyEvent(QEvent.KeyPress, Qt.Key_Equal, Qt.ControlModifier),  # not working
-                                # Qt.Key_Backspace: QKeyEvent(QEvent.KeyPress, Qt.Key_Equal, Qt.ControlModifier),  # not working
-                                Qt.Key_I: QKeyEvent(QEvent.KeyPress, Qt.Key_Minus, Qt.ControlModifier),
-                                Qt.Key_Comma: QKeyEvent(QEvent.KeyPress, Qt.Key_9, Qt.ControlModifier),
-                                Qt.Key_E: QKeyEvent(QEvent.KeyPress, Qt.Key_Period, Qt.AltModifier)
-                                }
+        self.keyTranslations = {
+            Qt.Key_Enter: QKeyEvent(QEvent.KeyPress, Qt.Key_Equal, Qt.NoModifier),
+            Qt.Key_Return: QKeyEvent(QEvent.KeyPress, Qt.Key_Equal, Qt.NoModifier),
+            Qt.Key_Exclam: QKeyEvent(QEvent.KeyPress, Qt.Key_Asterisk, Qt.AltModifier),
+            Qt.Key_Percent: QKeyEvent(QEvent.KeyPress, Qt.Key_Slash, Qt.AltModifier),
+            Qt.Key_ParenLeft: QKeyEvent(QEvent.KeyPress, Qt.Key_2, Qt.AltModifier),
+            Qt.Key_ParenRight: QKeyEvent(QEvent.KeyPress, Qt.Key_2, Qt.ControlModifier),
+            Qt.Key_S: QKeyEvent(QEvent.KeyPress, Qt.Key_7, Qt.AltModifier),
+            Qt.Key_C: QKeyEvent(QEvent.KeyPress, Qt.Key_4, Qt.AltModifier),
+            Qt.Key_T: QKeyEvent(QEvent.KeyPress, Qt.Key_1, Qt.AltModifier),
+            Qt.Key_Escape: QKeyEvent(QEvent.KeyPress, Qt.Key_Equal, Qt.AltModifier),
+            # Qt.Key_Delete: QKeyEvent(QEvent.KeyPress, Qt.Key_Equal, Qt.ControlModifier),  # not working
+            # Qt.Key_Backspace: QKeyEvent(QEvent.KeyPress, Qt.Key_Equal, Qt.ControlModifier),  # not working
+            Qt.Key_I: QKeyEvent(QEvent.KeyPress, Qt.Key_Minus, Qt.ControlModifier),
+            Qt.Key_Comma: QKeyEvent(QEvent.KeyPress, Qt.Key_9, Qt.ControlModifier),
+            Qt.Key_E: QKeyEvent(QEvent.KeyPress, Qt.Key_Period, Qt.AltModifier)
+        }
 
         # create screen and add it to the grid
         self.screen = qw.QLineEdit()
