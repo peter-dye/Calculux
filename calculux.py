@@ -225,12 +225,14 @@ class Calculux(qw.QMainWindow):
 
     def memory_add(self):
         self.evaluate()
-        self.memory += float(self.screen.text())
+        if self.screen.text() != 'ERROR':
+            self.memory += float(self.screen.text())
         return
 
     def memory_subtract(self):
         self.evaluate()
-        self.memory -= float(self.screen.text())
+        if self.screen.text() != 'ERROR':
+            self.memory -= float(self.screen.text())
         return
 
 
