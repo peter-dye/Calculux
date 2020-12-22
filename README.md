@@ -26,5 +26,6 @@ Short term features that I plan to implement include:
 - [ ] Documentation on how to use certain functions that are a bit out of the ordinary (e.g. mod, log, x_rt, etc)
 - [ ] adjustable number of significant figures
 - [ ] display fractions for decimals that can be exactly represented (and the symbol pi instead of the number)
+- [ ] make errors more specific
 
 This project is written in Python and uses Qt through PyQt5 for the GUI. If you are interested in contributing, I'm always open to pull requests. If you notice a bug, please open an issue, or fix it and submit a pull request.
