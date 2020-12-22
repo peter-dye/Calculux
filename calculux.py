@@ -3,7 +3,8 @@ from dataclasses import dataclass
 from typing import Callable, Any
 from math import sin, asin, cos, acos, tan, atan, sqrt, log, log10, fabs, factorial, pi, e
 import PyQt5.QtWidgets as qw
-from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QKeyEvent
+from PyQt5.QtCore import Qt, QEvent
 
 
 @dataclass
@@ -66,8 +67,22 @@ class Calculux(qw.QMainWindow):
                         Qt.Key_Equal: Button(4, 2, '=', self.evaluate, 'C', '', self.clear, 'D', '', self.delete)}
 
         # define key translations when multiple keys perform the same function
-        self.keyTranslations = {Qt.Key_Enter: Qt.Key_Equal,
-                                Qt.Key_Return: Qt.Key_Equal}
+        self.keyTranslations = {Qt.Key_Enter: QKeyEvent(QEvent.KeyPress, Qt.Key_Equal, Qt.NoModifier),
+                                Qt.Key_Return: QKeyEvent(QEvent.KeyPress, Qt.Key_Equal, Qt.NoModifier),
+                                Qt.Key_Exclam: QKeyEvent(QEvent.KeyPress, Qt.Key_Asterisk, Qt.AltModifier),
+                                Qt.Key_Percent: QKeyEvent(QEvent.KeyPress, Qt.Key_Slash, Qt.AltModifier),
+                                Qt.Key_ParenLeft: QKeyEvent(QEvent.KeyPress, Qt.Key_2, Qt.AltModifier),
+                                Qt.Key_ParenRight: QKeyEvent(QEvent.KeyPress, Qt.Key_2, Qt.ControlModifier),
+                                Qt.Key_S: QKeyEvent(QEvent.KeyPress, Qt.Key_7, Qt.AltModifier),
+                                Qt.Key_C: QKeyEvent(QEvent.KeyPress, Qt.Key_4, Qt.AltModifier),
+                                Qt.Key_T: QKeyEvent(QEvent.KeyPress, Qt.Key_1, Qt.AltModifier),
+                                Qt.Key_Escape: QKeyEvent(QEvent.KeyPress, Qt.Key_Equal, Qt.AltModifier),
+                                # Qt.Key_Delete: QKeyEvent(QEvent.KeyPress, Qt.Key_Equal, Qt.ControlModifier),  # not working
+                                # Qt.Key_Backspace: QKeyEvent(QEvent.KeyPress, Qt.Key_Equal, Qt.ControlModifier),  # not working
+                                Qt.Key_I: QKeyEvent(QEvent.KeyPress, Qt.Key_Minus, Qt.ControlModifier),
+                                Qt.Key_Comma: QKeyEvent(QEvent.KeyPress, Qt.Key_9, Qt.ControlModifier),
+                                Qt.Key_E: QKeyEvent(QEvent.KeyPress, Qt.Key_Period, Qt.AltModifier)
+                                }
 
         # create screen and add it to the grid
         self.screen = qw.QLineEdit()
@@ -101,16 +116,20 @@ class Calculux(qw.QMainWindow):
 
         return
 
-    def keyPressEvent(self, event):
+    def keyPressEvent(self, orig_event):
         # check if this key needs to be translated
-        if event.key() in self.keyTranslations:
-            key = self.keyTranslations[event.key()]
-        else:
-            key = event.key()
+        if orig_event.key() in self.keyTranslations:
+            event = self.keyTranslations[orig_event.key()]
 
-        if key in self.buttons:
+            if not event.modifiers() & Qt.AltModifier and not event.modifiers() & Qt.ControlModifier:
+                event = QKeyEvent(QEvent.KeyPress, event.key(), orig_event.modifiers())
+
+        else:
+            event = orig_event
+
+        if event.key() in self.buttons:
             # get the Button
-            button = self.buttons[key]
+            button = self.buttons[event.key()]
 
             # use modifiers() to determine which reference to animateClick on
             # and therefore which function to perform
