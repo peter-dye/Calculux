@@ -191,7 +191,7 @@ class Calculux(qw.QMainWindow):
             except SyntaxError:
                 self.screen.setText('ERROR')
             else:
-                result = str(result)
+                result = str(round(result, 5))
                 result = result.replace('e', 'E')
                 self.screen.setText(result)
                 self.previous_result = result
