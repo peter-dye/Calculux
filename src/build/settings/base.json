@@ -2,5 +2,5 @@
     "app_name": "Calculux",
     "author": "Peter Dye",
     "main_module": "src/main/python/main.py",
-    "version": "v0-alpha"
+    "version": "v0"
 }
