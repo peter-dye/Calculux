@@ -164,20 +164,20 @@ class Calculux(qw.QMainWindow):
         Re-definition of QWidget.keyPressEvent(). This function is called by Qt
         every time a key press is registered in the MainWindow / centralWidget.
         """
-        translated = False
-
         # check if this key needs to be translated
         if orig_event.key() in self.keyTranslations:
             # get the translated event
             event = self.keyTranslations[orig_event.key()]
+            translated = True
 
             # if the translation does not specify modifiers, keep the original modifiers
             if not event.modifiers() & Qt.AltModifier and not event.modifiers() & Qt.ControlModifier:
                 event = QKeyEvent(QEvent.KeyPress, event.key(), orig_event.modifiers())
-                translated = True
+                translated = False
         else:
             # otherwise use the original event
             event = orig_event
+            translated = False
 
         # if a valid key was pressed
         if event.key() in self.buttons:
