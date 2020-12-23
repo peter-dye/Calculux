@@ -172,9 +172,13 @@ class Calculux(qw.QMainWindow):
             # if the translation does not specify modifiers, keep the original modifiers
             if not event.modifiers() & Qt.AltModifier and not event.modifiers() & Qt.ControlModifier:
                 event = QKeyEvent(QEvent.KeyPress, event.key(), orig_event.modifiers())
+
+            translated = True
         else:
             # otherwise use the original event
             event = orig_event
+
+            translated = False
 
         # if a valid key was pressed
         if event.key() in self.buttons:
@@ -183,7 +187,7 @@ class Calculux(qw.QMainWindow):
 
             # check for mac or windows to know to switch what funcitons Alt
             # and Ctrl correspond to
-            if is_mac():
+            if is_mac() or translated:
                 # use modifiers() to determine which reference to animateClick on
                 # and therefore which function to perform
                 if event.modifiers() & Qt.AltModifier and button.ref_2 is not None:
