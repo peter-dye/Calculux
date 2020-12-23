@@ -1,9 +1,14 @@
+# fman build system imports
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from fbs_runtime.platform import is_mac
+
+# python built-in imports
 import sys
 from dataclasses import dataclass
 from typing import Callable, Any
 from cmath import sin, asin, cos, acos, tan, atan, sqrt, log, log10, pi, e
+
+# PyQt5 imports
 import PyQt5.QtWidgets as qw
 from PyQt5.QtGui import QKeyEvent
 from PyQt5.QtCore import Qt, QEvent
@@ -11,6 +16,10 @@ from PyQt5.QtCore import Qt, QEvent
 
 @dataclass
 class Button:
+    """
+    Holds all the information associated with a button, including
+    all three functions: primary, secondary, and tertiary.
+    """
     row: int
     col: int
     label_1: str
@@ -28,21 +37,27 @@ class Button:
 
 
 class Calculux(qw.QMainWindow):
+    """
+    Creates and runs the user interface.
+    """
 
     def __init__(self, appctxt):
         super().__init__()
 
+        # hold the reference to fbs ApplicationContext to access runtime variables
+        # and resources
         self.appctxt = appctxt
 
+        # set the window title
         self.setWindowTitle('Calculux')
 
-        # setup the central widget
+        # set up the central widget
         self.centralWidget = qw.QWidget(self)
         self.centralWidget.setMinimumSize(500, 500)
         self.centralWidget.setObjectName('centralWidget')
         self.setCentralWidget(self.centralWidget)
 
-        # add the about menu
+        # add the about menu (for macs)
         self.aboutAction = qw.QAction()
         self.aboutAction.setMenuRole(qw.QAction.AboutRole)
         self.aboutAction.triggered.connect(self.showAboutWindow)
@@ -62,7 +77,8 @@ class Calculux(qw.QMainWindow):
         self.grid.setVerticalSpacing(0)
         self.centralWidget.setLayout(self.grid)
 
-        # create dictionary to hold all Button references
+        # create dictionary to hold all Button references and define the 3
+        # functionalities of each button
         self.buttons = {
             Qt.Key_0: Button(4, 0, '0', None, 'pi', '', None, 'e', '', None),
             Qt.Key_1: Button(3, 0, '1', None, 'tan', '(', None, 'atan', '(', None),
@@ -101,12 +117,12 @@ class Calculux(qw.QMainWindow):
             Qt.Key_E: QKeyEvent(QEvent.KeyPress, Qt.Key_Period, Qt.AltModifier)
         }
 
-        # create screen and add it to the grid
-        self.screen = qw.QLineEdit()
-        self.screen.setAlignment(Qt.AlignRight)
-        self.screen.setReadOnly(True)
-        self.screen.setMinimumHeight(60)
-        self.grid.addWidget(self.screen, 0, 0, 1, 4)
+        # create display and add it to the grid
+        self.display = qw.QLineEdit()
+        self.display.setAlignment(Qt.AlignRight)
+        self.display.setReadOnly(True)
+        self.display.setMinimumHeight(60)
+        self.grid.addWidget(self.display, 0, 0, 1, 4)
 
         # create the buttons
         for button in self.buttons.values():
@@ -116,17 +132,17 @@ class Calculux(qw.QMainWindow):
 
             # Buttons must have at least one function so create the first
             # reference, add it to the grid, and connect the functionality
-            button.ref_1 = self.createButtonFunction(button.grid, button.label_1, button.connection_1, 'FIRST')
+            button.ref_1 = self.createButtonFunctionality(button.grid, button.label_1, button.connection_1, 'FIRST')
 
             # add the second function if applicable
             if len(button.label_2) > 0:
-                button.ref_2 = self.createButtonFunction(button.grid, button.label_2, button.connection_2, 'SECOND', button.hidden_2)
+                button.ref_2 = self.createButtonFunctionality(button.grid, button.label_2, button.connection_2, 'SECOND', button.hidden_2)
 
             # add the third function if applicable
             if len(button.label_3) > 0:
-                button.ref_3 = self.createButtonFunction(button.grid, button.label_3, button.connection_3, 'THIRD', button.hidden_3)
+                button.ref_3 = self.createButtonFunctionality(button.grid, button.label_3, button.connection_3, 'THIRD', button.hidden_3)
 
-        # initialize memory and previous result
+        # initialize memory and previous result variables
         self.memory = 0
         self.previous_result = ''
         self.last_operation_was_evaluate = False
@@ -134,24 +150,30 @@ class Calculux(qw.QMainWindow):
         return
 
     def keyPressEvent(self, orig_event: QKeyEvent) -> None:
+        """
+        Re-definition of QWidget.keyPressEvent(). This function is called by Qt
+        every time a key press is registered in the MainWindow / centralWidget.
+        """
         # check if this key needs to be translated
         if orig_event.key() in self.keyTranslations:
+            # get the translated event
             event = self.keyTranslations[orig_event.key()]
 
+            # if the translation does not specify modifiers, keep the original modifiers
             if not event.modifiers() & Qt.AltModifier and not event.modifiers() & Qt.ControlModifier:
                 event = QKeyEvent(QEvent.KeyPress, event.key(), orig_event.modifiers())
-
         else:
+            # otherwise use the original event
             event = orig_event
 
+        # if a valid key was pressed
         if event.key() in self.buttons:
-            # get the Button
+            # get the Button corresponding to the key
             button = self.buttons[event.key()]
 
             # check for mac or windows to know to switch what funcitons Alt
             # and Ctrl correspond to
             if is_mac():
-
                 # use modifiers() to determine which reference to animateClick on
                 # and therefore which function to perform
                 if event.modifiers() & Qt.AltModifier and button.ref_2 is not None:
@@ -163,9 +185,7 @@ class Calculux(qw.QMainWindow):
                 else:
                     # first / main funciton
                     button.ref_1.animateClick()
-
             else:
-
                 # use modifiers() to determine which reference to animateClick on
                 # and therefore which function to perform
                 if event.modifiers() & Qt.ControlModifier and button.ref_2 is not None:
@@ -181,15 +201,24 @@ class Calculux(qw.QMainWindow):
         return
 
     def showAboutWindow(self):
+        """
+        Creates and displays the About window on Mac.
+        """
         self.aboutWindow = AboutWindow()
         self.aboutWindow.show()
         return
 
-    def createButtonFunction(self, grid: qw.QGridLayout, label: str, connection: Callable, function: str, hidden='') -> Callable:
+    def createButtonFunctionality(self, grid: qw.QGridLayout, label: str, connection: Callable, function: str, hidden='') -> Callable:
+        """
+        Creates a specific functionality for a button, and handles all
+        associated setup.
+        """
+        # create the push button object and apply basic styling
         ref = qw.QPushButton(text=label)
         ref.setFlat(True)
         ref.setSizePolicy(qw.QSizePolicy.Expanding, qw.QSizePolicy.Expanding)
 
+        # place push button in correct spot for that functionality
         if function == 'FIRST':
             grid.addWidget(ref, 1, 0, 1, 2)
         elif function == 'SECOND':
@@ -207,41 +236,63 @@ class Calculux(qw.QMainWindow):
         return ref
 
     def buttonFactory(self, text: str) -> Callable:
+        """
+        Creates the default functionality for a push button (inserting it's text
+        to the display).
+        """
         def f():
             self.insert(text)
         return f
 
     def insert(self, text: str) -> None:
+        """
+        Inserts number or operator to the far right of the display.
+        """
+        # clear the display if the last operation was an evaluation
         if self.last_operation_was_evaluate:
-            self.screen.setText('')
+            self.display.setText('')
             self.last_operation_was_evaluate = False
 
-        self.screen.setText(self.screen.text() + text)
+        # instert the number/operator
+        self.display.setText(self.display.text() + text)
 
         return
 
     def evaluate(self) -> None:
-        expression = self.screen.text()
+        """
+        Takes in the expression on the display and displays the result.
+        """
+        expression = self.display.text()
 
+        # check that there is something to evaluate
         if len(expression) > 0 and expression != 'ERROR':
+            # parse the operation to a valid python math string
             expression = self.parse(expression)
 
             try:
+                # attempt to evaluate the expression
                 result = eval(expression)
             except SyntaxError:
-                self.screen.setText('ERROR')
+                # user probably entered an invalid math string
+                self.display.setText('ERROR')
             else:
+                # if the string was able to be evaluated
+                # check if result is complex number
                 if isinstance(result, complex):
                     if result.imag == 0:
+                        # return a real number if imag part is 0
                         result = str(round(result.real, 5))
                     else:
+                        # pretty print the complex number
                         result = complex(round(result.real, 5), round(result.imag, 5))
                         result = str(result)[1:-1]  # remove the parentheses
                 else:
                     result = str(round(result, 5))
 
+                # prepare the result and display it
                 result = result.replace('e', 'E')
-                self.screen.setText(result)
+                self.display.setText(result)
+
                 self.previous_result = result
 
         self.last_operation_was_evaluate = True
@@ -249,6 +300,11 @@ class Calculux(qw.QMainWindow):
         return
 
     def parse(self, expression: str) -> str:
+        """
+        Performs a series of string substitutions to manipulate the text from
+        the display, into a string that can be properly evaluated with the
+        eval() function.
+        """
         expression = expression.replace('fact', 'self.factorial')
         expression = expression.replace('PRV', self.previous_result)
         expression = expression.replace('ln', 'self.ln')
@@ -261,49 +317,87 @@ class Calculux(qw.QMainWindow):
         return expression
 
     def clear(self) -> None:
-        self.screen.setText('')
+        """
+        Clears the display.
+        """
+        self.display.setText('')
         return
 
     def delete(self) -> None:
-        self.screen.setText(self.screen.text()[:-1])
+        """
+        Deleted the right-most character on the display.
+        """
+        self.display.setText(self.display.text()[:-1])
         return
 
     def noAction(self) -> None:
+        """
+        Does nothing. Used as the connection for empty buttons so they can still
+        be properly created like the other ones.
+        """
         return
 
     def ln(self, x: float) -> float:
+        """
+        Returns the natural logarithm of input x.
+        """
         return log(x, e)
 
     def x_rt(self, x: float, expr: float) -> float:
+        """
+        Returns the xth root of input expression.
+        """
         return expr ** (1.0/x)
 
     def mod(self, expr: int, x: int):
+        """
+        Returns the modulo of the input expression by x.
+        """
         return expr % x
 
     def factorial(self, x: int) -> int:
+        """
+        Returns the factorial of x.
+        """
         return factorial(x)
 
     def memory_clear(self) -> None:
+        """
+        Clears the value stored in memory.
+        """
         self.memory = 0
         return
 
     def memory_get(self) -> float:
+        """
+        Returns the value stored in memory.
+        """
         return self.memory
 
     def memory_add(self) -> None:
+        """
+        Adds (as in sum) the result of the display to memory.
+        """
         self.evaluate()
-        if self.screen.text() != 'ERROR':
-            self.memory += float(self.screen.text())
+        if self.display.text() != 'ERROR':
+            self.memory += float(self.display.text())
         return
 
     def memory_subtract(self) -> None:
+        """
+        Subtracts the result of the display from memory.
+        """
         self.evaluate()
-        if self.screen.text() != 'ERROR':
-            self.memory -= float(self.screen.text())
+        if self.display.text() != 'ERROR':
+            self.memory -= float(self.display.text())
         return
 
 
 class AboutWindow(qw.QWidget):
+    """
+    Sets information and layout of the AboutWindow.
+    (only used on mac)
+    """
 
     def __init__(self):
         super().__init__()
@@ -327,11 +421,11 @@ class AboutWindow(qw.QWidget):
 
 
 def main():
-    appctxt = ApplicationContext()
-    view = Calculux(appctxt)
-    view.show()
-    exit_code = appctxt.app.exec_()
-    sys.exit(exit_code)
+    appctxt = ApplicationContext()  # needed for fbs
+    view = Calculux(appctxt)  # create the main window
+    view.show()  # show the main window
+    exit_code = appctxt.app.exec_()  # needed for fbs
+    sys.exit(exit_code)  # exit the app
 
 
 if __name__ == '__main__':
