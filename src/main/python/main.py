@@ -11,7 +11,7 @@ from cmath import sin, asin, cos, acos, tan, atan, sqrt, log, log10, pi, e
 # PyQt5 imports
 import PyQt5.QtWidgets as qw
 from PyQt5.QtGui import QKeyEvent
-from PyQt5.QtCore import Qt, QEvent
+from PyQt5.QtCore import Qt, QEvent, QObject
 
 
 @dataclass
@@ -119,8 +119,8 @@ class Calculux(qw.QMainWindow):
             Qt.Key_C: QKeyEvent(QEvent.KeyPress, Qt.Key_4, Qt.AltModifier),
             Qt.Key_T: QKeyEvent(QEvent.KeyPress, Qt.Key_1, Qt.AltModifier),
             Qt.Key_Escape: QKeyEvent(QEvent.KeyPress, Qt.Key_Equal, Qt.AltModifier),
-            # Qt.Key_Delete: QKeyEvent(QEvent.KeyPress, Qt.Key_Equal, Qt.ControlModifier),  # not working
-            # Qt.Key_Backspace: QKeyEvent(QEvent.KeyPress, Qt.Key_Equal, Qt.ControlModifier),  # not working
+            Qt.Key_Delete: QKeyEvent(QEvent.KeyPress, Qt.Key_Equal, Qt.ControlModifier),
+            Qt.Key_Backspace: QKeyEvent(QEvent.KeyPress, Qt.Key_Equal, Qt.ControlModifier),
             Qt.Key_I: QKeyEvent(QEvent.KeyPress, Qt.Key_Minus, Qt.ControlModifier),
             Qt.Key_Comma: QKeyEvent(QEvent.KeyPress, Qt.Key_9, Qt.ControlModifier),
             Qt.Key_E: QKeyEvent(QEvent.KeyPress, Qt.Key_Period, Qt.AltModifier)
@@ -131,6 +131,7 @@ class Calculux(qw.QMainWindow):
         self.display.setAlignment(Qt.AlignRight)
         self.display.setReadOnly(True)
         self.display.setMinimumHeight(60)
+        self.display.installEventFilter(self)
         self.grid.addWidget(self.display, 0, 0, 1, 4)
 
         # create the buttons
@@ -208,6 +209,19 @@ class Calculux(qw.QMainWindow):
                     button.ref_1.animateClick()
 
         return
+
+    def eventFilter(self, obj: QObject, event: QEvent) -> bool:
+        """
+        Filters events for the display in order to get backspace and delete key
+        presses. Otherwise they go straight to the display (because they the are
+        shortcuts I think) and do nothing (because the display is not editable).
+        """
+        if obj == self.display:
+            if event.type() == QEvent.KeyPress:
+                self.keyPressEvent(event)
+                return True
+            else:
+                return False
 
     def showAboutWindow(self):
         """
