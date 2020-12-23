@@ -19,6 +19,15 @@ class Button:
     """
     Holds all the information associated with a button, including
     all three functions: primary, secondary, and tertiary.
+
+    Note that a button consists of 3 push buttons, with the functionalities
+    mapped as:
+
+    |-----------|----------|
+    | secondary | tertiary |
+    |----------------------|
+    |        primary       |
+    |----------------------|
     """
     row: int
     col: int
