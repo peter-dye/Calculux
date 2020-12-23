@@ -14,7 +14,7 @@ The plan for this project in the longer term is to expand the functionality beyo
 
 Checkout what the project looks like right now!
 
-![calculator app screenshot](resources/screenshot.png)
+![calculator app screenshot](design_files/screenshot.png)
 
 Short term features that I plan to implement include:
 - [ ] Be able to switch between radians and degrees, currently radians is the only option
