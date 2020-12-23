@@ -42,6 +42,16 @@ class Calculux(qw.QMainWindow):
         self.centralWidget.setObjectName('centralWidget')
         self.setCentralWidget(self.centralWidget)
 
+        # add the about menu
+        self.aboutAction = qw.QAction()
+        self.aboutAction.setMenuRole(qw.QAction.AboutRole)
+        self.aboutAction.triggered.connect(self.showAboutWindow)
+        self.mainMenuBar = qw.QMenuBar()
+        self.mainMenu = qw.QMenu()
+        self.mainMenuBar.addMenu(self.mainMenu)
+        self.mainMenu.addAction(self.aboutAction)
+        self.setMenuBar(self.mainMenuBar)
+
         # load in the style sheet
         with open(self.appctxt.get_resource('stylesheet.qss'), 'r') as stylesheet:
             self.setStyleSheet(stylesheet.read())
@@ -170,6 +180,11 @@ class Calculux(qw.QMainWindow):
 
         return
 
+    def showAboutWindow(self):
+        self.aboutWindow = AboutWindow()
+        self.aboutWindow.show()
+        return
+
     def createButtonFunction(self, grid: qw.QGridLayout, label: str, connection: Callable, function: str, hidden='') -> Callable:
         ref = qw.QPushButton(text=label)
         ref.setFlat(True)
@@ -277,6 +292,29 @@ class Calculux(qw.QMainWindow):
         self.evaluate()
         if self.screen.text() != 'ERROR':
             self.memory -= float(self.screen.text())
+        return
+
+
+class AboutWindow(qw.QWidget):
+
+    def __init__(self):
+        super().__init__()
+
+        self.info = [
+            'Calculux',
+            'Version: v0-alpha',
+            'Author: Peter Dye',
+            'Website: https://github.com/peter-dye/Calculux',
+            'License: GNU GPL-3.0'
+        ]
+
+        self.layout = qw.QVBoxLayout()
+
+        for label in self.info:
+            self.layout.addWidget(qw.QLabel(text=label))
+
+        self.setLayout(self.layout)
+
         return
 
 
