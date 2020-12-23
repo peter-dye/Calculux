@@ -173,7 +173,7 @@ class Calculux(qw.QMainWindow):
             if not event.modifiers() & Qt.AltModifier and not event.modifiers() & Qt.ControlModifier:
                 event = QKeyEvent(QEvent.KeyPress, event.key(), orig_event.modifiers())
 
-            translated = True
+                translated = True
         else:
             # otherwise use the original event
             event = orig_event
