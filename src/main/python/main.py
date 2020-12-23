@@ -3,7 +3,7 @@ from fbs_runtime.platform import is_mac
 import sys
 from dataclasses import dataclass
 from typing import Callable, Any
-from math import sin, asin, cos, acos, tan, atan, sqrt, log, log10, fabs, factorial, pi, e
+from cmath import sin, asin, cos, acos, tan, atan, sqrt, log, log10, pi, e
 import PyQt5.QtWidgets as qw
 from PyQt5.QtGui import QKeyEvent
 from PyQt5.QtCore import Qt, QEvent
@@ -78,7 +78,7 @@ class Calculux(qw.QMainWindow):
             Qt.Key_Asterisk: Button(1, 3, '*', None, 'fact', '(', None, '^', '', None),
             Qt.Key_Slash: Button(2, 3, '/', None, 'mod', '(', None, 'rad', '', None),
             Qt.Key_Plus: Button(3, 3, '+', None, 'sqrt', '(', None, 'x_rt', '(', None),
-            Qt.Key_Minus: Button(4, 3, '-', None, 'abs', '(', None, 'i', '', None),
+            Qt.Key_Minus: Button(4, 3, '-', None, 'abs', '(', None, 'j', '', None),
             Qt.Key_Equal: Button(4, 2, '=', self.evaluate, 'C', '', self.clear, 'D', '', self.delete)
         }
 
@@ -231,7 +231,15 @@ class Calculux(qw.QMainWindow):
             except SyntaxError:
                 self.screen.setText('ERROR')
             else:
-                result = str(round(result, 5))
+                if isinstance(result, complex):
+                    if result.imag == 0:
+                        result = str(round(result.real, 5))
+                    else:
+                        result = complex(round(result.real, 5), round(result.imag, 5))
+                        result = str(result)[1:-1]  # remove the parentheses
+                else:
+                    result = str(round(result, 5))
+
                 result = result.replace('e', 'E')
                 self.screen.setText(result)
                 self.previous_result = result
@@ -241,7 +249,6 @@ class Calculux(qw.QMainWindow):
         return
 
     def parse(self, expression: str) -> str:
-        expression = expression.replace('abs', 'fabs')
         expression = expression.replace('fact', 'self.factorial')
         expression = expression.replace('PRV', self.previous_result)
         expression = expression.replace('ln', 'self.ln')
@@ -250,6 +257,7 @@ class Calculux(qw.QMainWindow):
         expression = expression.replace('x_rt', 'self.x_rt')
         expression = expression.replace('mod', 'self.mod')
         expression = expression.replace('M', str(self.memory_get()))
+        expression = expression.replace('j', '*1j')
         return expression
 
     def clear(self) -> None:
