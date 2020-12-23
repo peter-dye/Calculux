@@ -1,4 +1,5 @@
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
+from fbs_runtime.platform import is_windows, is_mac
 import sys
 from dataclasses import dataclass
 from typing import Callable, Any
@@ -137,17 +138,35 @@ class Calculux(qw.QMainWindow):
             # get the Button
             button = self.buttons[event.key()]
 
-            # use modifiers() to determine which reference to animateClick on
-            # and therefore which function to perform
-            if event.modifiers() & Qt.AltModifier and button.ref_2 is not None:
-                # second function
-                button.ref_2.animateClick()
-            elif event.modifiers() & Qt.ControlModifier and button.ref_3 is not None:
-                # third function
-                button.ref_3.animateClick()
+            # check for mac or windows to know to switch what funcitons Alt
+            # and Ctrl correspond to
+            if is_mac():
+
+                # use modifiers() to determine which reference to animateClick on
+                # and therefore which function to perform
+                if event.modifiers() & Qt.AltModifier and button.ref_2 is not None:
+                    # second function
+                    button.ref_2.animateClick()
+                elif event.modifiers() & Qt.ControlModifier and button.ref_3 is not None:
+                    # third function
+                    button.ref_3.animateClick()
+                else:
+                    # first / main funciton
+                    button.ref_1.animateClick()
+
             else:
-                # first / main funciton
-                button.ref_1.animateClick()
+
+                # use modifiers() to determine which reference to animateClick on
+                # and therefore which function to perform
+                if event.modifiers() & Qt.ControlModifier and button.ref_2 is not None:
+                    # second function
+                    button.ref_2.animateClick()
+                elif event.modifiers() & Qt.AltModifier and button.ref_3 is not None:
+                    # third function
+                    button.ref_3.animateClick()
+                else:
+                    # first / main funciton
+                    button.ref_1.animateClick()
 
         return
 
