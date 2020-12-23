@@ -427,7 +427,7 @@ class AboutWindow(qw.QWidget):
 
         self.info = [
             'Calculux',
-            'Version: v0-alpha',
+            'Version: v0',
             'Author: Peter Dye',
             'Website: https://github.com/peter-dye/Calculux',
             'License: GNU GPL-3.0'
