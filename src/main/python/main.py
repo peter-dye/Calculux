@@ -269,7 +269,7 @@ class Calculux(qw.QMainWindow):
     def x_rt(self, x: float, expr: float) -> float:
         return expr ** (1.0/x)
 
-    def mod(self, x: int, expr: int):
+    def mod(self, expr: int, x: int):
         return expr % x
 
     def factorial(self, x: int) -> int:
