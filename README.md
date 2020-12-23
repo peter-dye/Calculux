@@ -28,4 +28,4 @@ Short term features that I plan to implement include:
 - [ ] display fractions for decimals that can be exactly represented (and the symbol pi instead of the number)
 - [ ] make errors more specific
 
-This project is written in Python and uses Qt through PyQt5 for the GUI. If you are interested in contributing, I'm always open to pull requests. If you notice a bug, please open an issue, or fix it and submit a pull request.
+This project is written in Python, uses Qt through [PyQt5](https://riverbankcomputing.com/software/pyqt/intro) for the GUI, and uses [fman build system](https://github.com/mherrmann/fbs) to package the application. If you are interested in contributing, I'm always open to pull requests. If you notice a bug, please open an issue, or fix it and submit a pull request.
