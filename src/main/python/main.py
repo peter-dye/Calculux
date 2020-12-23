@@ -1,5 +1,5 @@
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
-from fbs_runtime.platform import is_windows, is_mac
+from fbs_runtime.platform import is_mac
 import sys
 from dataclasses import dataclass
 from typing import Callable, Any
