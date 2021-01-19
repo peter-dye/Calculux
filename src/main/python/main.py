@@ -6,7 +6,9 @@ from fbs_runtime.platform import is_mac
 import sys
 from dataclasses import dataclass
 from typing import Callable, Any
-from cmath import sin, asin, cos, acos, tan, atan, sqrt, log, log10, pi, e
+from math import radians, degrees
+import cmath  # sin, asin, cos, acos, tan, atan
+from cmath import sqrt, log, log10, pi, e
 
 # PyQt5 imports
 import PyQt5.QtWidgets as qw
@@ -101,7 +103,7 @@ class Calculux(qw.QMainWindow):
             Qt.Key_9: Button(1, 2, '9', None, 'log', '(', None, ',', '', None),
             Qt.Key_Period: Button(4, 1, '.', None, 'E', '', None, '^2', '', None),
             Qt.Key_Asterisk: Button(1, 3, '*', None, 'fact', '(', None, '^', '', None),
-            Qt.Key_Slash: Button(2, 3, '/', None, 'mod', '(', None, 'rad', '', None),
+            Qt.Key_Slash: Button(2, 3, '/', None, 'mod', '(', None, 'rad', '', self.set_rad_deg),
             Qt.Key_Plus: Button(3, 3, '+', None, 'sqrt', '(', None, 'x_rt', '(', None),
             Qt.Key_Minus: Button(4, 3, '-', None, 'abs', '(', None, 'j', '', None),
             Qt.Key_Equal: Button(4, 2, '=', self.evaluate, 'C', '', self.clear, 'D', '', self.delete)
@@ -156,6 +158,9 @@ class Calculux(qw.QMainWindow):
         self.memory = 0
         self.previous_result = ''
         self.last_operation_was_evaluate = False
+
+        # initialize configuration variables
+        self.use_radians = True  # true for radians and false for degrees
 
         return
 
@@ -332,6 +337,12 @@ class Calculux(qw.QMainWindow):
         eval() function.
         """
         expression = expression.replace('fact', 'self.factorial')
+        expression = expression.replace('sin', 'self.sin')
+        expression = expression.replace('asin', 'self.asin')
+        expression = expression.replace('cos', 'self.cos')
+        expression = expression.replace('acos', 'self.acos')
+        expression = expression.replace('tan', 'self.tan')
+        expression = expression.replace('atan', 'self.atan')
         expression = expression.replace('PRV', self.previous_result)
         expression = expression.replace('ln', 'self.ln')
         expression = expression.replace('E', '*10**')
@@ -417,6 +428,58 @@ class Calculux(qw.QMainWindow):
         if self.display.text() != 'ERROR':
             self.memory -= float(self.display.text())
         return
+
+    def set_rad_deg(self) -> None:
+        self.use_radians = not self.use_radians
+
+        if self.use_radians:
+            self.buttons[Qt.Key_Slash].ref_3.setText('rad')
+            if self.last_operation_was_evaluate:
+                self.display.setText('radians('+self.display.text()+')')
+                self.evaluate()
+        else:
+            self.buttons[Qt.Key_Slash].ref_3.setText('deg')
+            if self.last_operation_was_evaluate:
+                self.display.setText('degrees('+self.display.text()+')')
+                self.evaluate()
+
+        return
+
+    def sin(self, x) -> complex:
+        if self.use_radians:
+            return cmath.sin(x)
+        else:
+            return cmath.sin(radians(x))
+
+    def asin(self, x) -> complex:
+        if self.use_radians:
+            return cmath.asin(x)
+        else:
+            return cmath.asin(radians(x))
+
+    def cos(self, x) -> complex:
+        if self.use_radians:
+            return cmath.cos(x)
+        else:
+            return cmath.cos(radians(x))
+
+    def acos(self, x) -> complex:
+        if self.use_radians:
+            return cmath.acos(x)
+        else:
+            return cmath.acos(radians(x))
+
+    def tan(self, x) -> complex:
+        if self.use_radians:
+            return cmath.tan(x)
+        else:
+            return cmath.tan(radians(x))
+
+    def atan(self, x) -> complex:
+        if self.use_radians:
+            return cmath.atan(x)
+        else:
+            return cmath.atan(radians(x))
 
 
 class AboutWindow(qw.QWidget):
