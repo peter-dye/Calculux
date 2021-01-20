@@ -337,12 +337,15 @@ class Calculux(qw.QMainWindow):
         eval() function.
         """
         expression = expression.replace('fact', 'self.factorial')
+        expression = expression.replace('asin', 'as_place')  # so sin replacement doesn't mangle asin
         expression = expression.replace('sin', 'self.sin')
-        expression = expression.replace('asin', 'self.asin')
+        expression = expression.replace('as_place', 'self.asin')
+        expression = expression.replace('acos', 'ac_place')  # so cos replacement doesn't mangle acos
         expression = expression.replace('cos', 'self.cos')
-        expression = expression.replace('acos', 'self.acos')
+        expression = expression.replace('ac_place', 'self.acos')
+        expression = expression.replace('atan', 'at_place')  # so tan replacement doesn't mangle atan
         expression = expression.replace('tan', 'self.tan')
-        expression = expression.replace('atan', 'self.atan')
+        expression = expression.replace('at_place', 'self.atan')
         expression = expression.replace('PRV', self.previous_result)
         expression = expression.replace('ln', 'self.ln')
         expression = expression.replace('E', '*10**')
