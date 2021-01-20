@@ -433,52 +433,77 @@ class Calculux(qw.QMainWindow):
         return
 
     def set_rad_deg(self) -> None:
+        """
+        Changes settings between radians and degrees. If the expression on the
+        screen was the result of an evaluation, the value on the screen is also
+        converted between radians and degrees.
+        """
         self.use_radians = not self.use_radians
 
         if self.use_radians:
-            self.buttons[Qt.Key_Slash].ref_3.setText('rad')
+            self.buttons[Qt.Key_Slash].ref_3.setText('rad')  # change button text
             if self.last_operation_was_evaluate:
+                # convert value on display from degrees to radians
                 self.display.setText('radians('+self.display.text()+')')
                 self.evaluate()
         else:
-            self.buttons[Qt.Key_Slash].ref_3.setText('deg')
+            self.buttons[Qt.Key_Slash].ref_3.setText('deg')  # chnage button text
             if self.last_operation_was_evaluate:
+                # convert value on display from radians to degrees
                 self.display.setText('degrees('+self.display.text()+')')
                 self.evaluate()
 
         return
 
     def sin(self, x) -> complex:
+        """
+        Returns the sin of the input, handles input in radians and degrees.
+        """
         if self.use_radians:
             return cmath.sin(x)
         else:
             return cmath.sin(radians(x))
 
     def asin(self, x) -> complex:
+        """
+        Returns the asin of the input, handles output in radians and degrees.
+        """
         if self.use_radians:
             return cmath.asin(x)
         else:
             return degrees(cmath.asin(x))
 
     def cos(self, x) -> complex:
+        """
+        Returns the cos of the input, handles input in radians and degrees.
+        """
         if self.use_radians:
             return cmath.cos(x)
         else:
             return cmath.cos(radians(x))
 
     def acos(self, x) -> complex:
+        """
+        Returns the acos of the input, handles output in radians and degrees.
+        """
         if self.use_radians:
             return cmath.acos(x)
         else:
             return degrees(cmath.acos(x))
 
     def tan(self, x) -> complex:
+        """
+        Returns the tan of the input, handles input in radians and degrees.
+        """
         if self.use_radians:
             return cmath.tan(x)
         else:
             return cmath.tan(radians(x))
 
     def atan(self, x) -> complex:
+        """
+        Returns the atan of the input, handles output in radians and degrees.
+        """
         if self.use_radians:
             return cmath.atan(x)
         else:
