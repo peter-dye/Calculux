@@ -455,7 +455,7 @@ class Calculux(qw.QMainWindow):
         if self.use_radians:
             return cmath.asin(x)
         else:
-            return cmath.asin(radians(x))
+            return degrees(cmath.asin(x))
 
     def cos(self, x) -> complex:
         if self.use_radians:
@@ -467,7 +467,7 @@ class Calculux(qw.QMainWindow):
         if self.use_radians:
             return cmath.acos(x)
         else:
-            return cmath.acos(radians(x))
+            return degrees(cmath.acos(x))
 
     def tan(self, x) -> complex:
         if self.use_radians:
@@ -479,7 +479,7 @@ class Calculux(qw.QMainWindow):
         if self.use_radians:
             return cmath.atan(x)
         else:
-            return cmath.atan(radians(x))
+            return degrees(cmath.atan(x))
 
 
 class AboutWindow(qw.QWidget):
